@@ -13,16 +13,23 @@ window.addEventListener("load", function() {
     const right = document.querySelector("#right");
     const left = document.querySelector("#left");
 
-    let shuttlePixelHeight = Number(shuttle.style.top.slice(0, shuttle.style.top.length - 2));
-    let shuttlePixelLeft = Number(shuttle.style.left.slice(0, shuttle.style.left.length - 2));
-    let shuttlePixelRight = Number(shuttle.style.right.slice(0, shuttle.style.right.length - 2));
+    let shuttlePixelHeight = 250;
+    let shuttlePixelLeft = 0;
+
+    let resetShuttlePosition = function () {
+        shuttle.style.top = "250px";
+        shuttlePixelHeight = 250;
+        shuttle.style.left = "0px"
+        shuttlePixelLeft = 0;
+    }
 
     takeOffButton.addEventListener('click', function() {
         let confirmation = window.confirm("Confirm that theshuttle is ready for takeoff.");
         if (confirmation) {
             flightStatus.textContent = "Shuttle in flight.";
             shuttleBackground.style.backgroundColor = "blue";
-            shuttle.style.top = shuttlePixelHeight - 50 + 'px';
+            shuttlePixelHeight -= 50; 
+            shuttle.style.top = shuttlePixelHeight + 'px';
             let height = Number(shuttleHeight.textContent);
             shuttleHeight.textContent = height += 10000;
         }
@@ -33,7 +40,7 @@ window.addEventListener("load", function() {
         flightStatus.textContent = "The shuttle has landed.";
         shuttleBackground.style.backgroundColor = "green";
         shuttleHeight.textContent = 0;
-        shuttle.style.top = "250px";
+        resetShuttlePosition();
     });
 
     abortButton.addEventListener('click', function() {
@@ -42,8 +49,36 @@ window.addEventListener("load", function() {
            flightStatus.textContent = "Flight aborted";
            shuttleBackground.style.backgroundColor = "green";
            shuttleHeight.textContent = 0;
-           shuttle.style.top = "250px";
+            resetShuttlePosition();
        }
+    });
+
+    up.addEventListener('click', function() {
+        if (shuttlePixelHeight > 0 && flightStatus.textContent === "Shuttle in flight.") {
+            shuttlePixelHeight -= 10;
+            shuttle.style.top = shuttlePixelHeight + 'px'
+        }
+    });
+
+    down.addEventListener('click', function() {
+        if (shuttlePixelHeight < 240) {
+            shuttlePixelHeight += 10;
+            shuttle.style.top = shuttlePixelHeight + 'px'
+        } 
+    });
+
+    left.addEventListener('click', function() {
+        if (shuttlePixelHeight < 240 && shuttlePixelLeft > -360) {
+            shuttlePixelLeft -= 10;
+            shuttle.style.left = shuttlePixelLeft + 'px'
+        } 
+    });
+
+    right.addEventListener('click', function() {
+        if (shuttlePixelHeight < 240 && shuttlePixelLeft < 360) {
+            shuttlePixelLeft += 10;
+            shuttle.style.left = shuttlePixelLeft + 'px'
+        } 
     });
 
 });
